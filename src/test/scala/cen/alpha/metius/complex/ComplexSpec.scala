@@ -177,6 +177,8 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.NaN.inverse shouldBe Complex.NaN
       Complex(0.0, Double.NaN).inverse shouldBe Complex.NaN
       Complex(Double.NaN, 0.0).inverse shouldBe Complex.NaN
+      Complex(1.0, Double.NaN).inverse shouldBe Complex.NaN
+      Complex(Double.NaN, 1.0).inverse shouldBe Complex.NaN
       Complex(3.0, 4.0).inverse shouldBe Complex(0.12, -0.16)
       Complex(4.0, -3.0).inverse shouldBe Complex(0.16, 0.12)
       Complex(0.0, Double.PositiveInfinity).inverse shouldBe Complex.zero
@@ -191,6 +193,7 @@ class ComplexSpec extends WordSpec with Matchers {
       (z != Complex(3.3, 4.5)) shouldBe true
       (Complex(Double.PositiveInfinity, 0.0) == Complex(Double.NegativeInfinity, 0.0)) shouldBe true
       (Complex(Double.PositiveInfinity, 0.0) == Complex(3.3, Double.NegativeInfinity)) shouldBe true
+      (Complex.NaN == Complex.NaN) shouldBe true // cf. Java object, but not like IEEE 754
       (Complex(Double.NaN, 0.0) == Complex(3.3, Double.NaN)) shouldBe true
     }
 

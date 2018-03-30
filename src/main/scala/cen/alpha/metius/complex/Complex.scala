@@ -66,8 +66,9 @@ final case class Complex(real: Double, imag: Double) {
 
   def log: Complex = Complex(m.log(this.abs), this.arg)
 
-  // NOTE that NaN does not equal NaN for Double (using ==) but does here
-  // NOTE2 for Double.NaN equals yields true for anothe NaN, but == yields false...
+  // NOTE that NaN does not equal NaN for Double (using ==) but does here, like Java equals
+  // NOTE2 in Scala, Double.NaN == Double.NaN is false, but Double.NaN.equals(Double.NaN) yields true ...
+  // NOTE3 for more happiness, avoid NaN ...
   override def equals(that: Any): Boolean = {
     that.isInstanceOf[Complex] && {
       val c = that.asInstanceOf[Complex]
