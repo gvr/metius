@@ -1,6 +1,6 @@
 package cen.alpha.metius.complex
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{Assertion, Matchers, WordSpec}
 
 class QuaternionSpec extends WordSpec with Matchers {
 
@@ -17,6 +17,20 @@ class QuaternionSpec extends WordSpec with Matchers {
       Quaternion(0.0, 3.0, -4.0, 0.0).abs shouldBe 5.0
       Quaternion(0.0, 0.0, Double.NegativeInfinity, 0.0).abs shouldBe Double.PositiveInfinity
       Quaternion(0.0, Double.NaN, 0.0, 0.0).abs.isNaN shouldBe true
+    }
+
+    "have an inverse" in {
+      Quaternion.one.inverse shouldBe Quaternion.one
+      Quaternion.i.inverse shouldBe -Quaternion.i
+      Quaternion.j.inverse shouldBe -Quaternion.j
+      Quaternion.k.inverse shouldBe -Quaternion.k
+      Quaternion(6.0, 8.0, 0.0, 0.0).inverse shouldBe Quaternion(0.06, -0.08, 0.0, 0.0)
+      Quaternion(6.0, 0.0, 8.0, 0.0).inverse shouldBe Quaternion(0.06, 0.0, -0.08, 0.0)
+      Quaternion(6.0, 0.0, 0.0, 8.0).inverse shouldBe Quaternion(0.06, 0.0, 0.0, -0.08)
+    }
+
+    "have a convenience square norm" in {
+      Quaternion(1.0, 2.0, -3.0, 4.0).squareNorm shouldBe 30.0
     }
 
     "have a + operator" in {
@@ -102,6 +116,35 @@ class QuaternionSpec extends WordSpec with Matchers {
       Quaternion.zero * a shouldBe Quaternion.zero
       a * Quaternion.one shouldBe a
       Quaternion.one * a shouldBe a
+    }
+
+    "divide quaternion numbers" in {
+      Quaternion.one / Quaternion.one shouldBe Quaternion.one
+      Quaternion.one / Quaternion.i shouldBe -Quaternion.i
+      Quaternion.one / Quaternion.j shouldBe -Quaternion.j
+      Quaternion.one / Quaternion.k shouldBe -Quaternion.k
+      Quaternion.i / Quaternion.j shouldBe -Quaternion.k
+      val q = Quaternion(8.0, 6.0, 10.0, 2.0) / Quaternion(4.0, 3.0, 5.0, 1.0)
+      q.real shouldBe 2.0 +- math.ulp(1.0)
+      q.i shouldBe 0.0 +- math.ulp(1.0)
+      q.j shouldBe 0.0 +- math.ulp(1.0)
+      q.k shouldBe 0.0 +- math.ulp(1.0)
+    }
+
+    "add real numbers" in {
+      Quaternion.zero + 1.0 shouldBe Quaternion.one
+    }
+
+    "subtract real numbers" in {
+      Quaternion.zero - 1.0 shouldBe -Quaternion.one
+    }
+
+    "multiply real numbers" in {
+      Quaternion(1.0, -2.0, 3.0, -4.0) * 2.5 shouldBe Quaternion(2.5, -5.0, 7.5, -10.0)
+    }
+
+    "divide real numbers" in {
+      Quaternion(2.5, -5.0, 7.5, -10.0) / 2.5 shouldBe Quaternion(1.0, -2.0, 3.0, -4.0)
     }
 
   }

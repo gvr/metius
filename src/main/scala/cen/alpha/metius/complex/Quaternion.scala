@@ -4,11 +4,21 @@ import scala.{math => m}
 
 final case class Quaternion(real: Double, i: Double, j: Double, k: Double) {
 
-  def abs: Double = m.hypot(m.hypot(real, i), m.hypot(j, k))
+  private def hypot(a: Double, b: Double, c: Double, d: Double): Double =
+    m.hypot(m.hypot(a, b), m.hypot(c, d))
+
+  def squareNorm: Double = real * real + i * i + j * j + k * k
+
+  def abs: Double = hypot(real, i, j, k)
 
   def minus: Quaternion = Quaternion(-real, -i, -j, -k)
 
   def conjugate: Quaternion = Quaternion(real, -i, -j, -k)
+
+  def inverse: Quaternion = {
+    val x = 1.0 / squareNorm
+    Quaternion(real * x, -i * x, -j * x, -k * x)
+  }
 
   def unary_+ : Quaternion = this
 
@@ -29,6 +39,21 @@ final case class Quaternion(real: Double, i: Double, j: Double, k: Double) {
       this.real * other.j - this.i * other.k + this.j * other.real + this.k * other.i,
       this.real * other.k + this.i * other.j - this.j * other.i + this.k * other.real
     )
+
+  def /(other: Quaternion): Quaternion = {
+    val x = 1.0 / hypot(other.real, other.i, other.j, other.k)
+    val qa = Quaternion(this.real * x, this.i * x, this.j * x, this.k * x)
+    val qb = Quaternion(other.real * x, -other.i * x, -other.j * x, -other.k * x)
+    qa * qb
+  }
+
+  def +(x: Double): Quaternion = Quaternion(real + x, i, j, k)
+
+  def -(x: Double): Quaternion = Quaternion(real - x, i, j, k)
+
+  def *(x: Double): Quaternion = Quaternion(real * x, i * x, j * x, k * x)
+
+  def /(x: Double): Quaternion = Quaternion(real / x, i / x, j / x, k / x)
 
   private def signedString(x: Double, postfix: String): String =
     if (x > 0.0) s"+${x.toString}$postfix"

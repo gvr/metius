@@ -209,12 +209,12 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex(1, 1) / Complex(1, exp2(1023)) shouldBe Complex(exp2(-1023), -exp2(-1023))
       Complex(1, 1) / Complex(exp2(-1023), exp2(-1023)) shouldBe Complex(exp2(1023), 0.0)
       Complex(exp2(1023), exp2(-1023)) / Complex(exp2(677), exp2(-677)) shouldBe Complex(exp2(346), -exp2(-1008))
-      //Complex(exp2(1023), exp2(1023)) / Complex(1, 1) shouldBe Complex(exp2(1023), 0.0)
+      //FAILS Complex(exp2(1023), exp2(1023)) / Complex(1, 1) shouldBe Complex(exp2(1023), 0.0)
       Complex(exp2(1020), exp2(-844)) / Complex(exp2(656), exp2(-780)) shouldBe Complex(exp2(364), -exp2(-1072))
       Complex(exp2(-71), exp2(1021)) / Complex(exp2(1001), exp2(-323)) shouldBe Complex(exp2(-1072), exp2(20))
-      //Complex(exp2(-347), exp2(-54)) / Complex(exp2(-1037), exp2(-1058)) shouldBe Complex(3.898125604559113300e289, 8.174961907852353577e295)
-      //Complex(exp2(-1074), exp2(-1074)) / Complex(exp2(-1073), exp2(-1074)) shouldBe Complex(0.6, 0.2)
-      //Complex(exp2(1015), exp2(-989)) / Complex(exp2(1023), exp2(1023)) shouldBe Complex(0.001953125, -0.001953125)
+      //FAILS Complex(exp2(-347), exp2(-54)) / Complex(exp2(-1037), exp2(-1058)) shouldBe Complex(3.898125604559113300e289, 8.174961907852353577e295)
+      //FAILS Complex(exp2(-1074), exp2(-1074)) / Complex(exp2(-1073), exp2(-1074)) shouldBe Complex(0.6, 0.2)
+      //FAILS Complex(exp2(1015), exp2(-989)) / Complex(exp2(1023), exp2(1023)) shouldBe Complex(0.001953125, -0.001953125)
       Complex(exp2(-622), exp2(-1071)) / Complex(exp2(-343), exp2(-798)) shouldBe Complex(1.02951151789360578e-84, 6.97145987515076231e-220)
 
       // less on the edge
