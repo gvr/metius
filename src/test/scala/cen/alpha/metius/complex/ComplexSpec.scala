@@ -21,6 +21,14 @@ class ComplexSpec extends WordSpec with Matchers {
       z shouldBe Complex(3.3, 0.0)
     }
 
+    "be constructible from polar coordinates" in {
+      Complex.polar(2.0, -math.Pi / 6).real shouldBe math.sqrt(3.0) +- math.ulp(1.0)
+      Complex.polar(2.0, -math.Pi / 6).imag shouldBe -1.0 +- math.ulp(1.0)
+      Complex.polar(2.5, 0.0) shouldBe Complex(2.5, 0.0)
+      Complex.polar(2.5, math.Pi / 2).imag shouldBe 2.5
+      Complex.polar(2.5, math.Pi / 2).real shouldBe 0.0 +- math.ulp(1.0)
+    }
+
     "have an unapply method as case class" in {
       Complex(2.0, 3.0) match {
         case Complex(x, y) =>
@@ -166,6 +174,9 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.infinity.inverse shouldBe Complex.zero
       Complex.one.inverse shouldBe Complex.one
       Complex.i.inverse shouldBe -Complex.i
+      Complex.NaN.inverse shouldBe Complex.NaN
+      Complex(0.0, Double.NaN).inverse shouldBe Complex.NaN
+      Complex(Double.NaN, 0.0).inverse shouldBe Complex.NaN
       Complex(3.0, 4.0).inverse shouldBe Complex(0.12, -0.16)
       Complex(4.0, -3.0).inverse shouldBe Complex(0.16, 0.12)
       Complex(0.0, Double.PositiveInfinity).inverse shouldBe Complex.zero
@@ -235,6 +246,7 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.one / Complex.infinity shouldBe Complex.zero
       Complex.one / Complex.NaN shouldBe Complex.NaN
       Complex.NaN / Complex.one shouldBe Complex.NaN
+      Complex.NaN / Complex.NaN shouldBe Complex.NaN
       Complex.infinity / Complex.infinity shouldBe Complex.NaN
       Complex(Double.MaxValue, 0.0) / Complex(Double.MaxValue, 0.0) shouldBe Complex(1.0, 0.0)
       Complex(0.0, Double.MaxValue) / Complex(0.0, Double.MaxValue) shouldBe Complex(1.0, 0.0)
@@ -285,6 +297,26 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.zero / x shouldBe Complex.zero
       Complex.one / x shouldBe Complex(1.0 / x, 0.0)
       z / x shouldBe Complex(4.0, 2.0)
+    }
+
+    "have an exponential function" in {
+      val z = Complex(2.0, math.Pi / 6).exp
+      z.real shouldBe math.exp(2.0) * math.cos(math.Pi / 6)
+      z.imag shouldBe math.exp(2.0) * math.sin(math.Pi / 6)
+      Complex.zero.exp shouldBe Complex.one
+      Complex.i.exp.real shouldBe math.cos(1.0)
+      Complex.i.exp.imag shouldBe math.sin(1.0)
+      Complex.NaN.exp shouldBe Complex.NaN
+      Complex.infinity.exp shouldBe Complex.infinity
+    }
+
+    "have a logarithm function" in {
+      Complex.polar(math.exp(2.0), 1.23).log shouldBe Complex(2.0, 1.23)
+      Complex.polar(1.0, 1.23).log shouldBe Complex(0.0, 1.23)
+      Complex.one.log shouldBe Complex.zero
+      Complex.zero.log shouldBe Complex.infinity
+      Complex.NaN.log shouldBe Complex.NaN
+      Complex.infinity.log shouldBe Complex.infinity
     }
 
   }

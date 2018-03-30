@@ -1,6 +1,6 @@
 package cen.alpha.metius.complex
 
-import scala.math.{abs, atan2, hypot}
+import scala.{math => m}
 
 final case class Complex(real: Double, imag: Double) {
 
@@ -10,9 +10,9 @@ final case class Complex(real: Double, imag: Double) {
 
   def isInfinite: Boolean = (real.isInfinite && !imag.isNaN) || (imag.isInfinite && !real.isNaN)
 
-  def abs: Double = hypot(real, imag)
+  def abs: Double = m.hypot(real, imag)
 
-  def arg: Double = atan2(imag, real)
+  def arg: Double = m.atan2(imag, real)
 
   def squareNorm: Double = real * real + imag * imag
 
@@ -47,7 +47,8 @@ final case class Complex(real: Double, imag: Double) {
   }
 
   def /(other: Complex): Complex = {
-    Complex.divide(this.real, this.imag, other.real, other.imag)
+    if (this.isNaN || other.isNaN) Complex.NaN
+    else Complex.divide(this.real, this.imag, other.real, other.imag)
   }
 
   def +(x: Double): Complex = Complex(this.real + x, this.imag)
@@ -57,6 +58,13 @@ final case class Complex(real: Double, imag: Double) {
   def *(x: Double): Complex = Complex(this.real * x, this.imag * x)
 
   def /(x: Double): Complex = Complex(this.real / x, this.imag / x)
+
+  def exp: Complex = {
+    if (this.isInfinite) Complex.infinity
+    else Complex.polar(m.exp(this.real), this.imag)
+  }
+
+  def log: Complex = Complex(m.log(this.abs), this.arg)
 
   // NOTE that NaN does not equal NaN for Double (using ==) but does here
   // NOTE2 for Double.NaN equals yields true for anothe NaN, but == yields false...
@@ -97,9 +105,11 @@ object Complex {
 
   val infinity = Complex(Double.PositiveInfinity, 0.0)
 
-  val NaN = Complex(Double.NaN, Double.NaN)
+  val NaN = Complex(Double.NaN, 0.0)
 
   def apply(real: Double): Complex = Complex(real, 0.0)
+
+  def polar(mod: Double, arg: Double): Complex = Complex(mod * m.cos(arg), mod * m.sin(arg))
 
   private def inverse(c: Double, d: Double): Complex = {
     if (d == 0.0) {
@@ -107,7 +117,7 @@ object Complex {
       else Complex.infinity
     }
     else if (c.isInfinite || d.isInfinite) Complex.zero
-    else if (abs(c) >= abs(d)) {
+    else if (m.abs(c) >= m.abs(d)) {
       val r = d / c
       if (r != 0.0) {
         val re = 1.0 / (c + d * r)
@@ -137,7 +147,7 @@ object Complex {
   }
 
   private def divide(a: Double, b: Double, c: Double, d: Double): Complex = {
-    if (abs(c) >= abs(d)) divideOrdered(a, b, c, d)
+    if (m.abs(c) >= m.abs(d)) divideOrdered(a, b, c, d)
     else divideOrdered(-b, a, -d, c)
   }
 

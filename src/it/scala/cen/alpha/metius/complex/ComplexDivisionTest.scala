@@ -23,8 +23,8 @@ class ComplexDivisionTest extends FunSuite {
     val b = x.imag / s
     val c = y.real / s
     val d = y.imag / s
-    val real = (a * c + b * d)
-    val imaginary = (b * c - a * d)
+    val real = a * c + b * d
+    val imaginary = b * c - a * d
     Complex(real, imaginary)
   }
 
