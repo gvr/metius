@@ -51,9 +51,26 @@ final case class Complex(real: Double, imag: Double) {
 
   def /(x: Double): Complex = Complex(this.real / x, this.imag / x)
 
-  def exp: Complex = {
-    Complex.polar(m.exp(this.real), this.imag)
+  def square: Complex = Complex(real * real - imag * imag, 2.0 * real * imag)
+
+  def sqrt: Complex = {
+    if (real == 0.0) {
+      if (imag == 0.0) Complex.zero
+      else { // this branch insures for imaginary in the result real == +/- imag
+        val t = m.sqrt(0.5 * m.abs(imag))
+        if (imag > 0.0) Complex(t, t)
+        else Complex(t, -t)
+      }
+    }
+    else {
+      val t = m.sqrt(0.5 * (m.abs(real) + abs))
+      if (real >= 0) Complex(t, 0.5 * imag / t)
+      else if (imag >= 0) Complex(0.5 * imag / t, t)
+      else Complex(-0.5 * imag / t, -t)
+    }
   }
+
+  def exp: Complex = Complex.polar(m.exp(this.real), this.imag)
 
   def log: Complex = Complex(m.log(this.abs), this.arg)
 
@@ -79,9 +96,18 @@ object Complex {
 
   def polar(mod: Double, arg: Double): Complex = Complex(mod * m.cos(arg), mod * m.sin(arg))
 
+  def square(z: Complex): Complex = z.square
+
+  def sqrt(z: Complex): Complex = z.sqrt
+
+  def exp(z: Complex): Complex = z.exp
+
+  def log(z: Complex): Complex = z.log
+
   private def inverse(c: Double, d: Double): Complex = {
-    if (d == 0.0 && c != 0.0) Complex(1.0 / c, 0.0)
-    else if (c.isInfinite || d.isInfinite) Complex.zero
+    if (c.isInfinite || d.isInfinite) Complex.zero
+    else if (d == 0.0) Complex(1.0 / c, 0.0)
+    else if (c == 0.0) Complex(0.0, -1.0 / d)
     else if (m.abs(c) >= m.abs(d)) {
       val r = d / c
       if (r != 0.0) {
@@ -107,7 +133,6 @@ object Complex {
         val re = c * im * im
         Complex(re, im)
       }
-
     }
   }
 

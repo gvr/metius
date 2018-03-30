@@ -5,7 +5,7 @@ import org.scalameter.Gen
 
 object ComplexPerformance extends LocalTime {
 
-  case class TestComplex(re: Double, im: Double) {
+  final case class TestComplex(re: Double, im: Double) {
 
     def +(that: TestComplex): TestComplex =
       TestComplex(this.re + that.re, this.im + that.im)
@@ -32,7 +32,7 @@ object ComplexPerformance extends LocalTime {
 
   }
 
-  val sizes = Gen.range("size")(10000000, 800000000, 100000000)
+  val sizes = Gen.range("size")(1000000, 80000000, 10000000)
 
   val ranges = for {
     size <- sizes

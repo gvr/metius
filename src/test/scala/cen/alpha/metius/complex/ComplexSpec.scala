@@ -133,6 +133,7 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex(0.0, Double.PositiveInfinity).inverse shouldBe Complex.zero
       Complex(0.0, exp2(1023)).inverse shouldBe Complex(0.0, -exp2(-1023))
       Complex(exp2(1020), exp2(-1020)).inverse shouldBe Complex(exp2(-1020), 0.0)
+      Complex(exp2(-1020), exp2(1020)).inverse shouldBe Complex(0.0, -exp2(-1020))
     }
 
     "have an equals method (from case class; test serves behavior reference)" in {
@@ -142,7 +143,14 @@ class ComplexSpec extends WordSpec with Matchers {
       (z != Complex(3.3, 4.5)) shouldBe true
       (Complex(Double.PositiveInfinity, 0.0) == Complex(Double.NegativeInfinity, 0.0)) shouldBe false
       (Complex(Double.PositiveInfinity, 0.0) == Complex(3.3, Double.NegativeInfinity)) shouldBe false
+      (Complex(Double.NaN, 0.0) == Complex(Double.NaN, 0.0)) shouldBe false
+      Complex(Double.NaN).eq(Complex(Double.NaN, 0.0)) shouldBe false
+      Complex(Double.NaN).equals(Complex(Double.NaN, 0.0)) shouldBe false
       (Complex(Double.NaN, 0.0) == Complex(3.3, Double.NaN)) shouldBe false
+
+      // a side note for fun / amazement:
+      assert((Double.NaN == Double.NaN) == false)
+      assert(Double.NaN.equals(Double.NaN) == true)
     }
 
     "have a square norm convenience method" in {
@@ -187,6 +195,10 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.one / Complex.i shouldBe -Complex.i
       Complex(Double.MaxValue, 0.0) / Complex(Double.MaxValue, 0.0) shouldBe Complex(1.0, 0.0)
       Complex(0.0, Double.MaxValue) / Complex(0.0, Double.MaxValue) shouldBe Complex(1.0, 0.0)
+      (Complex(Double.PositiveInfinity, 1.0) / Complex(Double.PositiveInfinity, 1.0)).real.isNaN shouldBe true
+      (Complex(1.0, Double.PositiveInfinity) / Complex(Double.PositiveInfinity, 1.0)).imag.isNaN shouldBe true
+      Complex.i / Complex(Double.PositiveInfinity, 0.0) shouldBe Complex.zero
+      Complex.i / Complex(0.0, Double.PositiveInfinity) shouldBe Complex.zero
 
       // some edge cases from Baudin & Smith (2012) "A Robust Complex Division in Scilab" (arXiv:1210.4539v2)
       Complex(1, 1) / Complex(1, exp2(1023)) shouldBe Complex(exp2(-1023), -exp2(-1023))
@@ -236,6 +248,36 @@ class ComplexSpec extends WordSpec with Matchers {
       z / x shouldBe Complex(4.0, 2.0)
     }
 
+    "have a square" in {
+      Complex.zero.square shouldBe Complex.zero
+      Complex.one.square shouldBe Complex.one
+      Complex.i.square shouldBe -Complex.one
+
+      Complex(+2.0, 0.0).square shouldBe Complex(+4.0, 0.0)
+      Complex(-2.0, 0.0).square shouldBe Complex(+4.0, 0.0)
+      Complex(0.0, +2.0).square shouldBe Complex(-4.0, 0.0)
+      Complex(0.0, -2.0).square shouldBe Complex(-4.0, 0.0)
+      Complex(+1.0, +1.0).square shouldBe Complex(0.0, +2.0)
+      Complex(-1.0, +1.0).square shouldBe Complex(0.0, -2.0)
+      Complex(+1.0, -1.0).square shouldBe Complex(0.0, -2.0)
+      Complex(-1.0, -1.0).square shouldBe Complex(0.0, +2.0)
+    }
+
+    "have a square root" in {
+      // the square root is choosen to always have a non-negative real
+      Complex.zero.sqrt shouldBe Complex.zero
+      Complex.one.sqrt shouldBe Complex.one
+      Complex.i.sqrt shouldBe Complex(math.sqrt(0.5), math.sqrt(0.5))
+      Complex(+4.0, 0.0).sqrt shouldBe Complex(2.0, 0.0)
+      Complex(-4.0, 0.0).sqrt shouldBe Complex(0.0, 2.0)
+      Complex(0.0, +8.0).sqrt shouldBe Complex(+2.0, +2.0)
+      Complex(0.0, -8.0).sqrt shouldBe Complex(+2.0, -2.0)
+      Complex.polar(4.0, +1.5).sqrt shouldBe Complex.polar(2.0, +0.75)
+      Complex.polar(4.0, -1.5).sqrt shouldBe Complex.polar(2.0, -0.75)
+      Complex.polar(4.0, +2.0).sqrt shouldBe Complex.polar(2.0, +1.0)
+      Complex.polar(4.0, -2.0).sqrt shouldBe Complex.polar(2.0, -1.0)
+    }
+
     "have an exponential function" in {
       val z = Complex(2.0, math.Pi / 6).exp
       z.real shouldBe math.exp(2.0) * math.cos(math.Pi / 6)
@@ -249,6 +291,17 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.polar(math.exp(2.0), 1.23).log shouldBe Complex(2.0, 1.23)
       Complex.polar(1.0, 1.23).log shouldBe Complex(0.0, 1.23)
       Complex.one.log shouldBe Complex.zero
+    }
+
+  }
+
+  "The Complex companion object" should {
+
+    "have complex argument functions like scala.math for complex numbers" in {
+      Complex.square(Complex.i) shouldBe -Complex.one
+      Complex.sqrt(Complex(-4.0, 0.0)) shouldBe Complex(0.0, 2.0)
+      Complex.exp(Complex.zero) shouldBe Complex.one
+      Complex.log(Complex.one) shouldBe Complex.zero
     }
 
   }
