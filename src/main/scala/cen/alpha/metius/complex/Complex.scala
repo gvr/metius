@@ -4,12 +4,6 @@ import scala.{math => m}
 
 final case class Complex(real: Double, imag: Double) {
 
-  def isNaN: Boolean = real.isNaN || imag.isNaN
-
-  private def isInfiniteOrNaN: Boolean = real.isInfinite || imag.isInfinite
-
-  def isInfinite: Boolean = (real.isInfinite && !imag.isNaN) || (imag.isInfinite && !real.isNaN)
-
   def abs: Double = m.hypot(real, imag)
 
   def arg: Double = m.atan2(imag, real)
@@ -46,10 +40,8 @@ final case class Complex(real: Double, imag: Double) {
     Complex(re, im)
   }
 
-  def /(other: Complex): Complex = {
-    if (this.isNaN || other.isNaN) Complex.NaN
-    else Complex.divide(this.real, this.imag, other.real, other.imag)
-  }
+  def /(other: Complex): Complex =
+    Complex.divide(this.real, this.imag, other.real, other.imag)
 
   def +(x: Double): Complex = Complex(this.real + x, this.imag)
 
@@ -60,36 +52,15 @@ final case class Complex(real: Double, imag: Double) {
   def /(x: Double): Complex = Complex(this.real / x, this.imag / x)
 
   def exp: Complex = {
-    if (this.isInfinite) Complex.infinity
-    else Complex.polar(m.exp(this.real), this.imag)
+    Complex.polar(m.exp(this.real), this.imag)
   }
 
   def log: Complex = Complex(m.log(this.abs), this.arg)
 
-  // NOTE that NaN does not equal NaN for Double (using ==) but does here, like Java equals
-  // NOTE2 in Scala, Double.NaN == Double.NaN is false, but Double.NaN.equals(Double.NaN) yields true ...
-  // NOTE3 for more happiness, avoid NaN ...
-  override def equals(that: Any): Boolean = {
-    that.isInstanceOf[Complex] && {
-      val c = that.asInstanceOf[Complex]
-      (real == c.real && imag == c.imag) ||
-        (isNaN && c.isNaN) ||
-        (isInfinite && c.isInfinite)
-    }
-  }
-
-  override def hashCode: Int = {
-    if (isNaN) Double.NaN.hashCode
-    else if (isInfiniteOrNaN) Double.PositiveInfinity.hashCode
-    else real.hashCode + 31 * imag.hashCode
-  }
-
   private def imagToString: String = s"${imag.toString}i"
 
   override def toString: String = {
-    if (isNaN) "NaN"
-    else if (isInfiniteOrNaN) "Infinity"
-    else if (imag == 0.0) real.toString
+    if (imag == 0.0) real.toString
     else if (real == 0.0) imagToString
     else s"${real.toString}${if (imag > 0) "+" else ""}${imagToString}"
   }
@@ -104,19 +75,12 @@ object Complex {
 
   val i = Complex(0.0, 1.0)
 
-  val infinity = Complex(Double.PositiveInfinity, 0.0)
-
-  val NaN = Complex(Double.NaN, 0.0)
-
   def apply(real: Double): Complex = Complex(real, 0.0)
 
   def polar(mod: Double, arg: Double): Complex = Complex(mod * m.cos(arg), mod * m.sin(arg))
 
   private def inverse(c: Double, d: Double): Complex = {
-    if (d == 0.0) {
-      if (c != 0.0) Complex(1.0 / c, 0.0)
-      else Complex.infinity
-    }
+    if (d == 0.0 && c != 0.0) Complex(1.0 / c, 0.0)
     else if (c.isInfinite || d.isInfinite) Complex.zero
     else if (m.abs(c) >= m.abs(d)) {
       val r = d / c
@@ -153,14 +117,7 @@ object Complex {
   }
 
   private def divideOrdered(a: Double, b: Double, c: Double, d: Double): Complex = {
-    if (c == 0.0) {
-      if (a != 0.0 || b != 0.0) Complex.infinity
-      else Complex.NaN
-    }
-    else if (c.isInfinite) {
-      if (a.isInfinite || b.isInfinite) Complex.NaN
-      else Complex.zero
-    }
+    if (c.isInfinite && !(a.isInfinite || b.isInfinite)) Complex.zero
     else if (d == 0.0) {
       Complex(a / c, b / c)
     }

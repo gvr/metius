@@ -38,15 +38,7 @@ class ComplexDivisionTest extends FunSuite {
   }
 
   private def improvedDivInner(a: Double, b: Double, c: Double, d: Double): Complex = {
-    if (c == 0.0) {
-      if (a != 0.0 || b != 0.0) Complex.infinity
-      else Complex.NaN
-    }
-    else if (c.isInfinite) {
-      if (a.isInfinite || b.isInfinite) Complex.NaN
-      else Complex.zero
-    }
-    else if (d == 0.0) {
+    if (d == 0.0) {
       Complex(a / c, b / c)
     }
     else {

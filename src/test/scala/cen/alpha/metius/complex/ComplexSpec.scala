@@ -64,8 +64,6 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex(+3.3, -4.4).abs shouldBe 5.5
       Complex(-3.3, +4.4).abs shouldBe 5.5
       Complex(-3.3, -4.4).abs shouldBe 5.5
-      Complex.NaN.abs.isNaN
-      Complex.infinity.abs shouldBe Double.PositiveInfinity
     }
 
     "have an argument" in {
@@ -83,8 +81,6 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex(-7.5, +5.0).arg shouldBe +2.55359005004222568721703
       Complex(-7.5, -5.0).arg shouldBe -2.55359005004222568721703
       Complex(+5.0, +7.5).arg shouldBe +0.982793723247329067985711
-      Complex.NaN.arg.isNaN shouldBe true
-      Complex.infinity.arg shouldBe 0.0
     }
 
     "have a decent toString method" in {
@@ -97,46 +93,6 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex(+3.3, -4.4).toString shouldBe "3.3-4.4i"
       Complex(-3.3, +4.4).toString shouldBe "-3.3+4.4i"
       Complex(-3.3, -4.4).toString shouldBe "-3.3-4.4i"
-      Complex.NaN.toString shouldBe "NaN"
-      Complex.NaN.toString shouldBe Double.NaN.toString
-      Complex.infinity.toString shouldBe "Infinity"
-      Complex.infinity.toString shouldBe Double.PositiveInfinity.toString
-    }
-
-    "detect NaN values" in {
-      Complex.NaN.isNaN shouldBe true
-      Complex.zero.isNaN shouldBe false
-      Complex.one.isNaN shouldBe false
-      Complex.i.isNaN shouldBe false
-      Complex(0.0, 0.0).isNaN shouldBe false
-      Complex(1.0, 0.0).isNaN shouldBe false
-      Complex(0.0, 1.0).isNaN shouldBe false
-      Complex(1.0, 1.0).isNaN shouldBe false
-      Complex.infinity.isNaN shouldBe false
-      Complex(Double.NegativeInfinity, 1.0).isNaN shouldBe false
-      Complex(Double.PositiveInfinity, Double.PositiveInfinity).isNaN shouldBe false
-      Complex(Double.NaN, 1.0).isNaN shouldBe true
-      Complex(1.0, Double.NaN).isNaN shouldBe true
-      Complex(Double.NaN, Double.NaN).isNaN shouldBe true
-    }
-
-    "detect infinite values" in {
-      Complex.infinity.isInfinite shouldBe true
-      Complex(0.0, 0.0).isInfinite shouldBe false
-      Complex(1.0, 0.0).isInfinite shouldBe false
-      Complex(0.0, 1.0).isInfinite shouldBe false
-      Complex(1.0, 1.0).isInfinite shouldBe false
-      Complex(Double.PositiveInfinity, 0.0).isInfinite shouldBe true
-      Complex(0.0, Double.PositiveInfinity).isInfinite shouldBe true
-      Complex(Double.NegativeInfinity, 0.0).isInfinite shouldBe true
-      Complex(0.0, Double.NegativeInfinity).isInfinite shouldBe true
-      Complex(Double.PositiveInfinity, Double.PositiveInfinity).isInfinite shouldBe true
-      Complex(Double.PositiveInfinity, Double.NegativeInfinity).isInfinite shouldBe true
-      Complex(Double.NegativeInfinity, Double.PositiveInfinity).isInfinite shouldBe true
-      Complex(Double.NegativeInfinity, Double.NegativeInfinity).isInfinite shouldBe true
-      Complex(Double.NaN, 1.0).isInfinite shouldBe false
-      Complex(1.0, Double.NaN).isInfinite shouldBe false
-      Complex(Double.NaN, Double.NaN).isInfinite shouldBe false
     }
 
     "have predefined constants" in {
@@ -170,15 +126,8 @@ class ComplexSpec extends WordSpec with Matchers {
     }
 
     "have an inverse" in {
-      Complex.zero.inverse shouldBe Complex.infinity
-      Complex.infinity.inverse shouldBe Complex.zero
       Complex.one.inverse shouldBe Complex.one
       Complex.i.inverse shouldBe -Complex.i
-      Complex.NaN.inverse shouldBe Complex.NaN
-      Complex(0.0, Double.NaN).inverse shouldBe Complex.NaN
-      Complex(Double.NaN, 0.0).inverse shouldBe Complex.NaN
-      Complex(1.0, Double.NaN).inverse shouldBe Complex.NaN
-      Complex(Double.NaN, 1.0).inverse shouldBe Complex.NaN
       Complex(3.0, 4.0).inverse shouldBe Complex(0.12, -0.16)
       Complex(4.0, -3.0).inverse shouldBe Complex(0.16, 0.12)
       Complex(0.0, Double.PositiveInfinity).inverse shouldBe Complex.zero
@@ -186,22 +135,14 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex(exp2(1020), exp2(-1020)).inverse shouldBe Complex(exp2(-1020), 0.0)
     }
 
-    "have an equals method" in {
+    "have an equals method (from case class; test serves behavior reference)" in {
       val z = Complex(3.3, 4.4)
       (z == Complex(3.3, 4.4)) shouldBe true
       (z == Complex(3.3, 4.5)) shouldBe false
       (z != Complex(3.3, 4.5)) shouldBe true
-      (Complex(Double.PositiveInfinity, 0.0) == Complex(Double.NegativeInfinity, 0.0)) shouldBe true
-      (Complex(Double.PositiveInfinity, 0.0) == Complex(3.3, Double.NegativeInfinity)) shouldBe true
-      (Complex.NaN == Complex.NaN) shouldBe true // cf. Java object, but not like IEEE 754
-      (Complex(Double.NaN, 0.0) == Complex(3.3, Double.NaN)) shouldBe true
-    }
-
-    "have a hashCode" in {
-      Complex(1.0, 2.0).hashCode shouldBe 1.0.hashCode + 31 * 2.0.hashCode
-      Complex(2.0, 0.0).hashCode shouldBe 2.0.hashCode
-      Complex.infinity.hashCode shouldBe Double.PositiveInfinity.hashCode
-      Complex.NaN.hashCode shouldBe Double.NaN.hashCode
+      (Complex(Double.PositiveInfinity, 0.0) == Complex(Double.NegativeInfinity, 0.0)) shouldBe false
+      (Complex(Double.PositiveInfinity, 0.0) == Complex(3.3, Double.NegativeInfinity)) shouldBe false
+      (Complex(Double.NaN, 0.0) == Complex(3.3, Double.NaN)) shouldBe false
     }
 
     "have a square norm convenience method" in {
@@ -243,14 +184,7 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex(8.0, 6.0) / Complex.one shouldBe Complex(8.0, 6.0)
       Complex(8.0, 6.0) / Complex.i shouldBe Complex(6.0, -8.0)
       Complex.one / Complex(8.0, 6.0) shouldBe Complex(0.08, -0.06)
-      Complex.one / Complex.zero shouldBe Complex.infinity
       Complex.one / Complex.i shouldBe -Complex.i
-      Complex.zero / Complex.zero shouldBe Complex.NaN
-      Complex.one / Complex.infinity shouldBe Complex.zero
-      Complex.one / Complex.NaN shouldBe Complex.NaN
-      Complex.NaN / Complex.one shouldBe Complex.NaN
-      Complex.NaN / Complex.NaN shouldBe Complex.NaN
-      Complex.infinity / Complex.infinity shouldBe Complex.NaN
       Complex(Double.MaxValue, 0.0) / Complex(Double.MaxValue, 0.0) shouldBe Complex(1.0, 0.0)
       Complex(0.0, Double.MaxValue) / Complex(0.0, Double.MaxValue) shouldBe Complex(1.0, 0.0)
 
@@ -309,17 +243,12 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.zero.exp shouldBe Complex.one
       Complex.i.exp.real shouldBe math.cos(1.0)
       Complex.i.exp.imag shouldBe math.sin(1.0)
-      Complex.NaN.exp shouldBe Complex.NaN
-      Complex.infinity.exp shouldBe Complex.infinity
     }
 
     "have a logarithm function" in {
       Complex.polar(math.exp(2.0), 1.23).log shouldBe Complex(2.0, 1.23)
       Complex.polar(1.0, 1.23).log shouldBe Complex(0.0, 1.23)
       Complex.one.log shouldBe Complex.zero
-      Complex.zero.log shouldBe Complex.infinity
-      Complex.NaN.log shouldBe Complex.NaN
-      Complex.infinity.log shouldBe Complex.infinity
     }
 
   }

@@ -32,7 +32,7 @@ object ComplexPerformance extends LocalTime {
 
   }
 
-  val sizes = Gen.range("size")(1000000, 80000000, 10000000)
+  val sizes = Gen.range("size")(10000000, 800000000, 100000000)
 
   val ranges = for {
     size <- sizes
