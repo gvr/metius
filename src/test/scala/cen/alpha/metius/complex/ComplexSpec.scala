@@ -104,6 +104,11 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.i.imag shouldBe 1.0
     }
 
+    "have a + operator" in {
+      +Complex.zero shouldBe Complex.zero
+      +Complex.one shouldBe Complex.one
+    }
+
     "have a unary minus operation" in {
       val z = Complex(3.3, 4.4)
       z.minus shouldBe Complex(-3.3, -4.4)
@@ -298,6 +303,7 @@ class ComplexSpec extends WordSpec with Matchers {
   "The Complex companion object" should {
 
     "have complex argument functions like scala.math for complex numbers" in {
+      Complex.abs(Complex.i) shouldBe 1.0
       Complex.square(Complex.i) shouldBe -Complex.one
       Complex.sqrt(Complex(-4.0, 0.0)) shouldBe Complex(0.0, 2.0)
       Complex.exp(Complex.zero) shouldBe Complex.one

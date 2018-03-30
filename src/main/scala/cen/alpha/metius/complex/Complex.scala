@@ -16,6 +16,8 @@ final case class Complex(real: Double, imag: Double) {
 
   def mirror: Complex = Complex(-real, imag)
 
+  def unary_+ : Complex = this
+
   def unary_- : Complex = minus
 
   def unary_~ : Complex = conjugate
@@ -74,12 +76,10 @@ final case class Complex(real: Double, imag: Double) {
 
   def log: Complex = Complex(m.log(this.abs), this.arg)
 
-  private def imagToString: String = s"${imag.toString}i"
-
   override def toString: String = {
     if (imag == 0.0) real.toString
-    else if (real == 0.0) imagToString
-    else s"${real.toString}${if (imag > 0) "+" else ""}${imagToString}"
+    else if (real == 0.0) s"${imag.toString}i"
+    else s"${real.toString}${if (imag > 0) "+" else ""}${imag.toString}i"
   }
 
 }
@@ -95,6 +95,8 @@ object Complex {
   def apply(real: Double): Complex = Complex(real, 0.0)
 
   def polar(mod: Double, arg: Double): Complex = Complex(mod * m.cos(arg), mod * m.sin(arg))
+
+  def abs(z: Complex): Double = z.abs
 
   def square(z: Complex): Complex = z.square
 
