@@ -14,8 +14,6 @@ final case class Complex(real: Double, imag: Double) {
 
   def conjugate: Complex = Complex(real, -imag)
 
-  def mirror: Complex = Complex(-real, imag)
-
   def unary_+ : Complex = this
 
   def unary_- : Complex = minus

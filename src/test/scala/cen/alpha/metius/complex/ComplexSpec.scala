@@ -123,13 +123,6 @@ class ComplexSpec extends WordSpec with Matchers {
       ~(~z) shouldBe z
     }
 
-    "have a mirror operation (real -> -real)" in {
-      val z = Complex(3.3, 4.4)
-      z.mirror shouldBe Complex(-3.3, 4.4)
-      z.mirror.mirror shouldBe z
-      z.mirror shouldBe ~(-z)
-    }
-
     "have an inverse" in {
       Complex.one.inverse shouldBe Complex.one
       Complex.i.inverse shouldBe -Complex.i
@@ -296,6 +289,9 @@ class ComplexSpec extends WordSpec with Matchers {
       Complex.polar(math.exp(2.0), 1.23).log shouldBe Complex(2.0, 1.23)
       Complex.polar(1.0, 1.23).log shouldBe Complex(0.0, 1.23)
       Complex.one.log shouldBe Complex.zero
+      Complex.i.log shouldBe Complex(0.0, math.Pi / 2.0)
+      Complex.i.log.exp.real shouldBe Complex.i.real +- math.ulp(1.0)
+      Complex.i.log.exp.imag shouldBe Complex.i.imag
     }
 
   }
