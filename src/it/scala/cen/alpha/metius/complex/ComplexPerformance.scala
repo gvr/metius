@@ -32,7 +32,7 @@ object ComplexPerformance extends LocalTime {
 
   }
 
-  val sizes = Gen.range("size")(1000000, 80000000, 10000000)
+  val sizes: Gen[Int] = Gen.range("size")(200000, 1000000, 200000)
 
   val ranges = for {
     size <- sizes
@@ -40,11 +40,12 @@ object ComplexPerformance extends LocalTime {
 
   val z = Complex(3.0, 4.0)
   var v = Complex.one
-
   performance of "Complex" in {
     measure method "multiply" in {
       using(ranges) in {
-        _ => v = z * v * Complex(0.2, 0.0)
+        _ foreach { _ =>
+          v = z * v * Complex(0.2, 0.0)
+        }
       }
     }
   }
@@ -54,7 +55,7 @@ object ComplexPerformance extends LocalTime {
   performance of "Complex" in {
     measure method "multiply comparison" in {
       using(ranges) in {
-        _ => {
+        _ foreach { _ =>
           val re = vre
           val im = vim
           vre = (3.0 * re - 4.0 * im) / 5.0
@@ -69,7 +70,7 @@ object ComplexPerformance extends LocalTime {
   performance of "Case class Complex" in {
     measure method "multiply comparison" in {
       using(ranges) in {
-        _ => {
+        _ foreach { _ =>
           val re = tre
           val im = tim
           tre = (re * 0.6) - (im * 0.8)
@@ -78,24 +79,5 @@ object ComplexPerformance extends LocalTime {
       }
     }
   }
-
-//  val sz = SpireComplex(3.0, 4.0)
-//  var sv = SpireComplex(1.0)
-//  performance of "Spire Complex" in {
-//    measure method "multiply" in {
-//      using(ranges) in {
-//        _ => sv = sz * sv * 0.2
-//      }
-//    }
-//  }
-
-
-
-  println(v)
-  println(vre)
-  println(vim)
-  println(tre)
-  println(tim)
-//  println(sv)
 
 }
