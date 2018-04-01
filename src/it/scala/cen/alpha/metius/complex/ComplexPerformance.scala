@@ -3,34 +3,34 @@ package cen.alpha.metius.complex
 import org.scalameter.Bench.LocalTime
 import org.scalameter.Gen
 
-object ComplexPerformance extends LocalTime {
+final case class TestComplex(re: Double, im: Double) {
 
-  final case class TestComplex(re: Double, im: Double) {
+  def +(that: TestComplex): TestComplex =
+    TestComplex(this.re + that.re, this.im + that.im)
 
-    def +(that: TestComplex): TestComplex =
-      TestComplex(this.re + that.re, this.im + that.im)
+  def -(that: TestComplex): TestComplex =
+    TestComplex(this.re - that.re, this.im - that.im)
 
-    def -(that: TestComplex): TestComplex =
-      TestComplex(this.re - that.re, this.im - that.im)
-
-    def *(that: TestComplex): TestComplex = {
-      val r = this.re * that.re - this.im * that.im
-      val i = this.re * that.im + this.im * that.re
-      TestComplex(r, i)
-    }
-
-    def /(that: TestComplex): TestComplex = {
-      val d = that.re * that.re + that.im * that.im
-      val r = (this.re * that.re + this.im * that.im) / d
-      val i = (this.im * that.re - this.re * that.im) / d
-      TestComplex(r, i)
-    }
-
-    def *(x: Double): TestComplex = TestComplex(this.re * x, this.im * x)
-
-    def /(x: Double): TestComplex = TestComplex(this.re / x, this.im / x)
-
+  def *(that: TestComplex): TestComplex = {
+    val r = this.re * that.re - this.im * that.im
+    val i = this.re * that.im + this.im * that.re
+    TestComplex(r, i)
   }
+
+  def /(that: TestComplex): TestComplex = {
+    val d = that.re * that.re + that.im * that.im
+    val r = (this.re * that.re + this.im * that.im) / d
+    val i = (this.im * that.re - this.re * that.im) / d
+    TestComplex(r, i)
+  }
+
+  def *(x: Double): TestComplex = TestComplex(this.re * x, this.im * x)
+
+  def /(x: Double): TestComplex = TestComplex(this.re / x, this.im / x)
+
+}
+
+object ComplexPerformance extends LocalTime {
 
   val sizes: Gen[Int] = Gen.range("size")(200000, 1000000, 200000)
 
@@ -65,16 +65,13 @@ object ComplexPerformance extends LocalTime {
     }
   }
 
-  var tre = TestComplex(1.0, 0.0)
-  var tim = TestComplex(0.0, 0.0)
+  var tx = TestComplex(3.0, 4.0)
+  var ty = TestComplex(1.0, 0.0)
   performance of "Case class Complex" in {
     measure method "multiply comparison" in {
       using(ranges) in {
         _ foreach { _ =>
-          val re = tre
-          val im = tim
-          tre = (re * 0.6) - (im * 0.8)
-          tim = (im * 0.6) + (re * 0.8)
+          ty = tx * ty * TestComplex(0.2, 0.0)
         }
       }
     }
