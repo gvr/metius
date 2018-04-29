@@ -23,6 +23,8 @@ lazy val commonSettings = Seq(
       "com.storm-enroute" %% "scalameter" % scalaMeterVersion % "it"
     )
   },
+  publishArtifact in IntegrationTest := false,
+  publishArtifact in Test := false,
   licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 )
 
