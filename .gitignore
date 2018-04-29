@@ -4,6 +4,7 @@
 # ... except the following
 !.gitignore
 !.codacy.yaml
+!.travis.yml
 
 # ignore work directories
 target/
