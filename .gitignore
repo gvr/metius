@@ -3,6 +3,7 @@
 
 # ... except the following
 !.gitignore
+!.codacy.yaml
 
 # ignore work directories
 target/
