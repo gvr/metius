@@ -1,6 +1,5 @@
 lazy val commonSettings = Seq(
   organization := "cen.alpha",
-  version := "0.1",
   scalaVersion := "2.12.6",
   scalacOptions ++= Seq(
     "-encoding", "UTF-8",
@@ -23,7 +22,9 @@ lazy val commonSettings = Seq(
       "org.scalatest" %% "scalatest" % scalaTestVersion % "test,it",
       "com.storm-enroute" %% "scalameter" % scalaMeterVersion % "it"
     )
-  }
+  },
+  publishMavenStyle := true,
+  publishTo := Some("Bintray API Realm" at s"https://api.bintray.com/content/gvr/cen.alpha/metius/${version.value}")
 )
 
 lazy val metius = (project in file(".")).
