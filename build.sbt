@@ -1,5 +1,5 @@
 lazy val commonSettings = Seq(
-  organization := "cen.alpha",
+  organization := "com.github.gvr",
   scalaVersion := "2.12.6",
   scalacOptions ++= Seq(
     "-encoding", "UTF-8",

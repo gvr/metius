@@ -1,4 +1,4 @@
-package cen.alpha.metius.complex
+package com.github.gvr.metius.complex
 
 import scala.{math => m}
 

@@ -1,5 +1,6 @@
 package cen.alpha.metius.real
 
+import com.github.gvr.metius.real.Polynomial
 import org.scalameter.Bench.LocalTime
 import org.scalameter.Gen
 

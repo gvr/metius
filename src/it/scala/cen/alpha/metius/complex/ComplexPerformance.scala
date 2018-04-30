@@ -1,5 +1,6 @@
 package cen.alpha.metius.complex
 
+import com.github.gvr.metius.complex.Complex
 import org.scalameter.Bench.LocalTime
 import org.scalameter.Gen
 
@@ -32,14 +33,14 @@ final case class TestComplex(re: Double, im: Double) {
 
 object ComplexPerformance extends LocalTime {
 
-  val sizes: Gen[Int] = Gen.range("size")(200000, 1000000, 200000)
+  private val sizes: Gen[Int] = Gen.range("size")(200000, 1000000, 200000)
 
-  val ranges = for {
+  private val ranges = for {
     size <- sizes
   } yield 0 until size
 
-  val z = Complex(3.0, 4.0)
-  var v = Complex.one
+  private val z = Complex(3.0, 4.0)
+  private var v = Complex.one
   performance of "Complex" in {
     measure method "multiply" in {
       using(ranges) in {
@@ -50,8 +51,8 @@ object ComplexPerformance extends LocalTime {
     }
   }
 
-  var vre = 1.0
-  var vim = 0.0
+  private var vre = 1.0
+  private var vim = 0.0
   performance of "Complex" in {
     measure method "multiply comparison" in {
       using(ranges) in {
@@ -65,8 +66,8 @@ object ComplexPerformance extends LocalTime {
     }
   }
 
-  var tx = TestComplex(3.0, 4.0)
-  var ty = TestComplex(1.0, 0.0)
+  private var tx = TestComplex(3.0, 4.0)
+  private var ty = TestComplex(1.0, 0.0)
   performance of "Case class Complex" in {
     measure method "multiply comparison" in {
       using(ranges) in {

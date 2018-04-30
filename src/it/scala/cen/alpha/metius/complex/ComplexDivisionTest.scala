@@ -1,5 +1,6 @@
 package cen.alpha.metius.complex
 
+import com.github.gvr.metius.complex.Complex
 import org.scalatest.FunSuite
 
 import scala.math.{abs, hypot, pow}
