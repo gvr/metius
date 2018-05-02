@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ###### Added
 - This Changelog
 
+###### Fixed
+- Integration package names
+
 ## [0.1.4] - 2018-05-02
 First Maven Central Release
 

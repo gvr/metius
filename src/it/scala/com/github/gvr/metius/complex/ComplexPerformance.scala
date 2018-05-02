@@ -1,6 +1,5 @@
-package cen.alpha.metius.complex
+package com.github.gvr.metius.complex
 
-import com.github.gvr.metius.complex.Complex
 import org.scalameter.Bench.LocalTime
 import org.scalameter.Gen
 
@@ -66,7 +65,7 @@ object ComplexPerformance extends LocalTime {
     }
   }
 
-  private var tx = TestComplex(3.0, 4.0)
+  private val tx = TestComplex(3.0, 4.0)
   private var ty = TestComplex(1.0, 0.0)
   performance of "Case class Complex" in {
     measure method "multiply comparison" in {
