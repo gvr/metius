@@ -1,6 +1,7 @@
 lazy val commonSettings = Seq(
   organization := "com.github.gvr",
   scalaVersion := "2.12.6",
+  crossScalaVersions := Seq(scalaVersion.value, "2.11.12"),
   scalacOptions ++= Seq(
     "-encoding", "UTF-8",
     "-target:jvm-1.8",
