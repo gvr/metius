@@ -21,7 +21,7 @@ lazy val commonSettings = Seq(
     val scalaMeterVersion = "0.9"
     Seq(
       "org.scalatest" %% "scalatest" % scalaTestVersion % "test,it",
-      "com.storm-enroute" %% "scalameter" % scalaMeterVersion % "it"
+      "com.storm-enroute" %% "scalameter" % scalaMeterVersion % "test,it"
     )
   }
 )
