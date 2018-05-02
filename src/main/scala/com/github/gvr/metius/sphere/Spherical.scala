@@ -1,6 +1,6 @@
 package com.github.gvr.metius.sphere
 
-import scala.math.{acos, atan2, cos, hypot, sin, sqrt, Pi => π}
+import scala.math.{Pi => π, _}
 
 /**
   * Coordinate system (φ, λ) with
