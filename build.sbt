@@ -25,6 +25,7 @@ lazy val commonSettings = Seq(
   },
   publishArtifact in IntegrationTest := false,
   publishArtifact in Test := false,
+  bintrayRepository := "mvn",
   licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 )
 
