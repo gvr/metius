@@ -1,6 +1,6 @@
 lazy val commonSettings = Seq(
   organization := "com.github.gvr",
-  scalaVersion := "2.12.6",
+  scalaVersion := "2.12.8",
   crossScalaVersions := Seq(scalaVersion.value, "2.11.12"),
   scalacOptions ++= Seq(
     "-encoding", "UTF-8",
@@ -18,7 +18,7 @@ lazy val commonSettings = Seq(
   ),
   libraryDependencies ++= {
     val scalaTestVersion = "3.0.5"
-    val scalaMeterVersion = "0.9"
+    val scalaMeterVersion = "0.10.1"
     Seq(
       "org.scalatest" %% "scalatest" % scalaTestVersion % "test,it",
       "com.storm-enroute" %% "scalameter" % scalaMeterVersion % "test,it"

@@ -1,4 +1,4 @@
-package com.github.gvr.metius.real
+package metius.real
 
 object Polynomial {
 

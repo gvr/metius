@@ -1,6 +1,7 @@
-package com.github.gvr.metius.sphere
+package metius.sphere
 
-import scala.math.{Pi => π, _}
+import scala.math.{Pi => π}
+import scala.math._
 
 /**
   * Coordinate system (φ, λ) with
@@ -34,13 +35,14 @@ object Spherical {
   }
 
   def vincenty(φ1: Double, λ1: Double, φ2: Double, λ2: Double): Double = {
-    val Δλ = λ2 - λ1
     val sinφ1 = sin(φ1)
     val sinφ2 = sin(φ2)
     val cosφ1 = cos(φ1)
     val cosφ2 = cos(φ1)
+    val Δλ = λ2 - λ1
     val cosΔλ = cos(Δλ)
-    val y = hypot(cosφ2 * sin(Δλ), cosφ1 * sinφ2 - sinφ1 * cosφ2 * cosΔλ)
+    val sinΔλ = sin(Δλ)
+    val y = hypot(cosφ2 * sinΔλ, cosφ1 * sinφ2 - sinφ1 * cosφ2 * cosΔλ)
     val x = sinφ1 * sinφ2 + cosφ1 * cosφ2 * cosΔλ
     atan2(y, x)
   }

@@ -1,4 +1,4 @@
-package com.github.gvr.metius.sphere
+package metius.sphere
 
 import org.scalatest.{Matchers, WordSpec}
 

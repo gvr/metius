@@ -1,4 +1,4 @@
-package com.github.gvr.metius.complex
+package metius.complex
 
 import org.scalameter.Bench.LocalTime
 import org.scalameter.Gen
