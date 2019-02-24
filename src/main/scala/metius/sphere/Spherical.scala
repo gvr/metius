@@ -1,7 +1,6 @@
 package metius.sphere
 
-import scala.math.{Pi => π}
-import scala.math._
+import scala.math.{Pi => π, _}
 
 /**
   * Coordinate system (φ, λ) with
