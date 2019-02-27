@@ -5,8 +5,7 @@ inThisBuild(
     scalaVersion := "2.12.8",
     crossScalaVersions := Seq(scalaVersion.value, "2.11.12"),
     scalacOptions ++= Seq(
-      "-encoding", "UTF-8",
-      "-target:jvm-1.8",
+      "-encoding", "utf-8",
       "-deprecation",
       "-feature",
       "-unchecked",
@@ -44,17 +43,23 @@ lazy val publishSettings = Seq(
 )
 
 lazy val metius = (project in file(".")).
+  aggregate(`metius-complex`, `metius-random`)
+
+
+lazy val `metius-complex` = (project in file("metius-complex")).
   settings(publishSettings).
   configs(IntegrationTest).
   settings(Defaults.itSettings).
   settings(
-    name := "metius",
-    libraryDependencies ++= {
-      val scalaTestVersion = "3.0.5"
-      val scalaMeterVersion = "0.10.1"
-      Seq(
-        "org.scalatest" %% "scalatest" % scalaTestVersion % "test,it",
-        "com.storm-enroute" %% "scalameter" % scalaMeterVersion % "test,it"
-      )
-    }
+    name := "metius-complex",
+    libraryDependencies ++= dependencies.`metius-complex`
+  )
+
+lazy val `metius-random` = (project in file("metius-random")).
+  settings(publishSettings).
+  configs(IntegrationTest).
+  settings(Defaults.itSettings).
+  settings(
+    name := "metius-random",
+    libraryDependencies ++= dependencies.`metius-random`
   )

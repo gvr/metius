@@ -3,33 +3,6 @@ package metius.complex
 import org.scalameter.Bench.LocalTime
 import org.scalameter.Gen
 
-final case class TestComplex(re: Double, im: Double) {
-
-  def +(that: TestComplex): TestComplex =
-    TestComplex(this.re + that.re, this.im + that.im)
-
-  def -(that: TestComplex): TestComplex =
-    TestComplex(this.re - that.re, this.im - that.im)
-
-  def *(that: TestComplex): TestComplex = {
-    val r = this.re * that.re - this.im * that.im
-    val i = this.re * that.im + this.im * that.re
-    TestComplex(r, i)
-  }
-
-  def /(that: TestComplex): TestComplex = {
-    val d = that.re * that.re + that.im * that.im
-    val r = (this.re * that.re + this.im * that.im) / d
-    val i = (this.im * that.re - this.re * that.im) / d
-    TestComplex(r, i)
-  }
-
-  def *(x: Double): TestComplex = TestComplex(this.re * x, this.im * x)
-
-  def /(x: Double): TestComplex = TestComplex(this.re / x, this.im / x)
-
-}
-
 object ComplexPerformance extends LocalTime {
 
   private val sizes: Gen[Int] = Gen.range("size")(200000, 1000000, 200000)
@@ -75,6 +48,33 @@ object ComplexPerformance extends LocalTime {
         }
       }
     }
+  }
+
+  final case class TestComplex(re: Double, im: Double) {
+
+    def +(that: TestComplex): TestComplex =
+      TestComplex(this.re + that.re, this.im + that.im)
+
+    def -(that: TestComplex): TestComplex =
+      TestComplex(this.re - that.re, this.im - that.im)
+
+    def *(that: TestComplex): TestComplex = {
+      val r = this.re * that.re - this.im * that.im
+      val i = this.re * that.im + this.im * that.re
+      TestComplex(r, i)
+    }
+
+    def /(that: TestComplex): TestComplex = {
+      val d = that.re * that.re + that.im * that.im
+      val r = (this.re * that.re + this.im * that.im) / d
+      val i = (this.im * that.re - this.re * that.im) / d
+      TestComplex(r, i)
+    }
+
+    def *(x: Double): TestComplex = TestComplex(this.re * x, this.im * x)
+
+    def /(x: Double): TestComplex = TestComplex(this.re / x, this.im / x)
+
   }
 
 }
