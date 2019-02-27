@@ -9,8 +9,8 @@ final class PCG32 private(state: Long, increment: Long) extends PseudoRandomGene
   override def get: Int = scramble(state)
 
   override def next: PCG32 = {
-    val state = advanceState(state, increment)
-    new PCG32(state, increment)
+    val newState = advanceState(state, increment)
+    new PCG32(newState, increment)
   }
 
 }

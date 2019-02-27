@@ -2,7 +2,7 @@ package metius.random
 
 import java.lang.Long.rotateLeft
 
-final class XSR256 private (state0: Long, state1: Long, state2: Long, state3: Long) {
+final class XSR256 private(state0: Long, state1: Long, state2: Long, state3: Long) {
 
   import XSR256._
 
@@ -24,28 +24,8 @@ final class XSR256 private (state0: Long, state1: Long, state2: Long, state3: Lo
 object XSR256 {
 
   @inline private def scramble(state: Long): Long = {
-    var result = rotateLeft(state + (state << 2L), 7)
+    val result = rotateLeft(state + (state << 2L), 7)
     result + (result << 3L)
   }
-
-  private class State {
-
-    var s0: Long = 0
-    var s1: Long = 0
-    var s2: Long = 0
-    var s3: Long = 0
-
-    def next(): Unit = {
-      val oldState = s1
-      s2 ^= s0
-      s3 ^= s1
-      s1 ^= s2
-      s0 ^= s3
-      s2 ^= oldState << 17L
-      s3 = rotateLeft(s3, 45)
-    }
-
-  }
-
 
 }

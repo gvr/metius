@@ -1,6 +1,6 @@
 package metius.random
 
-trait PseudoRandomGenerator[@specialized(Int, Long) T <: Numeric[T]] {
+trait PseudoRandomGenerator[@specialized(Int, Long) T] {
 
   def get: T
 
