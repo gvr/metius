@@ -2,13 +2,13 @@ package metius.random
 
 import java.lang.Long.rotateLeft
 
-final class XSR256 private(state0: Long, state1: Long, state2: Long, state3: Long) {
+final class XSR256 private(state0: Long, state1: Long, state2: Long, state3: Long) extends PseudoRandomGenerator[Long] {
 
   import XSR256._
 
-  def get: Long = scramble(state1)
+  override def get: Long = scramble(state1)
 
-  def next: XSR256 = {
+  override def next: XSR256 = {
     val s2 = state2 ^ state0
     val s3 = state3 ^ state1
     new XSR256(

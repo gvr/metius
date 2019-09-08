@@ -2,15 +2,15 @@ package metius.random
 
 import java.lang.Long.bitCount
 
-final class SplitMix private(seed: Long, gamma: Long) {
+final class SplitMix private(seed: Long, gamma: Long) extends PseudoRandomGenerator[Long] {
 
   import SplitMix._
 
-  def getLong: Long = mix13(seed)
+  override def get: Long = mix13(seed)
 
-  def getInt: Int = mix04(seed).toInt
+  //def getInt: Int = mix04(seed).toInt
 
-  def next: SplitMix = new SplitMix(seed + gamma, gamma)
+  override def next: SplitMix = new SplitMix(seed + gamma, gamma)
 
   def split: SplitMix = {
     val newGamma = mixGamma(seed + gamma)
