@@ -2,8 +2,8 @@
 inThisBuild(
   Seq(
     organization := "com.github.gvr",
-    scalaVersion := "2.12.8",
-    crossScalaVersions := Seq(scalaVersion.value, "2.11.12"),
+    scalaVersion := "2.13.1",
+    crossScalaVersions := Seq(scalaVersion.value, "2.12.10", "2.11.12"),
     scalacOptions ++= Seq(
       "-encoding", "UTF-8",
       "-target:jvm-1.8",
@@ -11,8 +11,6 @@ inThisBuild(
       "-feature",
       "-unchecked",
       "-Xlint",
-      "-Xfuture",
-      "-Yno-adapted-args",
       "-Ywarn-dead-code",
       "-Ywarn-numeric-widen",
       "-Ywarn-value-discard",
@@ -22,7 +20,6 @@ inThisBuild(
 )
 
 lazy val publishSettings = Seq(
-  publishArtifact in IntegrationTest := false,
   publishArtifact in Test := false,
   bintrayRepository := "mvn",
   pomIncludeRepository := { _ => false },
@@ -43,18 +40,28 @@ lazy val publishSettings = Seq(
   }
 )
 
-lazy val metius = (project in file(".")).
+lazy val root = (project in file("."))
+  .aggregate(metius, examples, benchmarks)
+  .settings(
+    name := "metius"
+  )
+
+lazy val benchmarks = (project in file("benchmarks"))
+  .dependsOn(metius)
+  .settings(
+    name := "benchmarks",
+    libraryDependencies ++= Dependencies.benchmarks
+  )
+
+lazy val examples = (project in file("examples"))
+  .dependsOn(metius)
+  .settings(
+    name := "examples"
+  )
+
+lazy val metius = (project in file("metius")).
   settings(publishSettings).
-  configs(IntegrationTest).
-  settings(Defaults.itSettings).
   settings(
     name := "metius",
-    libraryDependencies ++= {
-      val scalaTestVersion = "3.0.5"
-      val scalaMeterVersion = "0.10.1"
-      Seq(
-        "org.scalatest" %% "scalatest" % scalaTestVersion % "test,it",
-        "com.storm-enroute" %% "scalameter" % scalaMeterVersion % "test,it"
-      )
-    }
+    libraryDependencies ++= Dependencies.metius
   )

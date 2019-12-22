@@ -3,7 +3,7 @@ package metius.real
 object Polynomial {
 
   // replace with Math.fma for Java 9+
-  private def fma(a: Double, b: Double, c: Double): Double = a * b + c
+  @inline private def fma(a: Double, b: Double, c: Double): Double = a * b + c
 
   @inline def horner(as: Seq[Double]): Double => Double = x =>
     as.foldRight(0.0) { (a: Double, acc: Double) => fma(x, acc, a) }
